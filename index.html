@@ -1,0 +1,2055 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SplitWise — Expense Splitter</title>
+
+<style>
+:root {
+    --bg: #f5f7fb;
+    --card: #ffffff;
+    --text: #182230;
+    --muted: #6b7280;
+    --primary: #5b5ce2;
+    --primary2: #7c5cff;
+    --border: #e7e9f0;
+    --green: #159570;
+    --red: #dc4c64;
+    --shadow: 0 14px 35px rgba(31, 41, 55, 0.08);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+}
+
+/* NAVBAR */
+
+.nav {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: rgba(255,255,255,0.94);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+}
+
+.nav-inner {
+    max-width: 1180px;
+    margin: auto;
+    padding: 15px 22px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    font-size: 1.35rem;
+    font-weight: 850;
+}
+
+.logo span {
+    color: var(--primary);
+}
+
+.nav-links {
+    display: flex;
+    gap: 8px;
+}
+
+.nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    padding: 9px 12px;
+    border-radius: 10px;
+}
+
+.nav-links a:hover {
+    background: #f0f1ff;
+    color: var(--primary);
+}
+
+/* CONTAINER */
+
+.container {
+    max-width: 1180px;
+    margin: auto;
+    padding: 28px 22px 60px;
+}
+
+/* HERO */
+
+.hero {
+    background: linear-gradient(135deg, #5657d9, #7b5bf3);
+    color: white;
+
+    border-radius: 28px;
+    padding: 38px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 25px;
+
+    box-shadow: var(--shadow);
+    margin-bottom: 24px;
+}
+
+.hero h1 {
+    font-size: clamp(2rem, 5vw, 3.3rem);
+    margin: 0 0 10px;
+}
+
+.hero p {
+    margin: 0;
+    opacity: 0.9;
+    max-width: 650px;
+    line-height: 1.6;
+}
+
+.hero-icon {
+    font-size: 5rem;
+}
+
+/* GRID */
+
+.grid {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 22px;
+}
+
+/* CARD */
+
+.card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    padding: 24px;
+    box-shadow: var(--shadow);
+}
+
+.card h2 {
+    margin: 0 0 18px;
+    font-size: 1.25rem;
+}
+
+/* FORM */
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.field.full {
+    grid-column: 1 / -1;
+}
+
+label {
+    font-size: 0.88rem;
+    font-weight: 700;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 12px 13px;
+
+    border: 1px solid var(--border);
+    border-radius: 12px;
+
+    background: white;
+    color: var(--text);
+
+    outline: none;
+}
+
+input:focus,
+select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(91,92,226,0.1);
+}
+
+/* BUTTONS */
+
+.btn {
+    border: 0;
+    border-radius: 12px;
+    padding: 12px 17px;
+
+    font-weight: 750;
+
+    transition: 0.2s;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+}
+
+.btn-primary {
+    background: linear-gradient(
+        135deg,
+        var(--primary),
+        var(--primary2)
+    );
+
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-1px);
+}
+
+.btn-light {
+    background: #f1f2f7;
+    color: var(--text);
+}
+
+.btn-danger {
+    background: #fff0f2;
+    color: var(--red);
+}
+
+.btn-small {
+    padding: 8px 11px;
+    font-size: 0.82rem;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 17px;
+    flex-wrap: wrap;
+}
+
+/* PEOPLE */
+
+.people-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin-top: 13px;
+}
+
+.person-chip {
+    background: #f0f1ff;
+    border: 1px solid #dfe0ff;
+    color: #4849bb;
+
+    padding: 8px 11px;
+
+    border-radius: 999px;
+
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.add-person {
+    display: flex;
+    gap: 8px;
+    margin-top: 13px;
+}
+
+.add-person input {
+    flex: 1;
+}
+
+/* NOTICE */
+
+.notice {
+    padding: 12px 14px;
+
+    background: #f0f8f5;
+    border: 1px solid #cdebe1;
+
+    color: #147558;
+
+    border-radius: 12px;
+
+    margin-bottom: 14px;
+
+    font-size: 0.9rem;
+}
+
+/* STATS */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+
+    margin: 22px 0;
+}
+
+.stat {
+    background: var(--card);
+    border: 1px solid var(--border);
+
+    border-radius: 18px;
+
+    padding: 20px;
+
+    box-shadow: var(--shadow);
+}
+
+.stat .label {
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+
+.stat .value {
+    font-size: 1.55rem;
+    font-weight: 850;
+    margin-top: 6px;
+}
+
+.green {
+    color: var(--green);
+}
+
+.red {
+    color: var(--red);
+}
+
+/* BALANCES */
+
+.balance-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.balance {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 13px 14px;
+
+    background: #fafbfe;
+
+    border: 1px solid var(--border);
+    border-radius: 14px;
+}
+
+.balance-name {
+    font-weight: 750;
+}
+
+.balance-amount {
+    font-weight: 850;
+}
+
+/* SETTLEMENTS */
+
+.settlements {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.settlement {
+    padding: 14px;
+
+    border-radius: 14px;
+
+    background: #f7f8fc;
+    border: 1px solid var(--border);
+}
+
+.settlement strong {
+    color: var(--primary);
+}
+
+/* EXPENSES */
+
+.expenses {
+    margin-top: 22px;
+}
+
+.expense {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding: 15px 0;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.expense:last-child {
+    border-bottom: 0;
+}
+
+.expense-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.expense-icon {
+    width: 43px;
+    height: 43px;
+
+    border-radius: 13px;
+
+    background: #f0f1ff;
+
+    display: grid;
+    place-items: center;
+
+    font-size: 1.25rem;
+}
+
+.expense-title {
+    font-weight: 800;
+}
+
+.expense-meta {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-top: 3px;
+}
+
+.expense-amount {
+    font-weight: 850;
+}
+
+/* EMPTY */
+
+.empty {
+    text-align: center;
+    padding: 35px 15px;
+    color: var(--muted);
+}
+
+.empty-icon {
+    font-size: 2.3rem;
+    margin-bottom: 8px;
+}
+
+/* FOOTER */
+
+.footer {
+    text-align: center;
+    color: var(--muted);
+
+    font-size: 0.86rem;
+
+    padding: 25px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:850px) {
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-icon {
+        display: none;
+    }
+}
+
+@media(max-width:650px) {
+
+    .nav-links {
+        display: none;
+    }
+
+    .container {
+        padding: 18px 14px 45px;
+    }
+
+    .hero {
+        padding: 28px 22px;
+        border-radius: 22px;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .field.full {
+        grid-column: auto;
+    }
+
+    .expense {
+        align-items: flex-start;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="nav">
+
+    <div class="nav-inner">
+
+        <div class="logo">
+            Split<span>Wise</span> 💸
+        </div>
+
+        <div class="nav-links">
+            <a href="#add">Add Expense</a>
+            <a href="#balances">Balances</a>
+            <a href="#history">History</a>
+        </div>
+
+    </div>
+
+</nav>
+
+
+<main class="container">
+
+<!-- ================= HERO ================= -->
+
+<section class="hero">
+
+    <div>
+
+        <h1>
+            Split expenses. Stay friends.
+        </h1>
+
+        <p>
+            Track group expenses, see exactly who owes whom,
+            and settle up with fewer payments.
+        </p>
+
+    </div>
+
+    <div class="hero-icon">
+        💸
+    </div>
+
+</section>
+
+<!-- ================= CLOUD SETUP ================= -->
+
+<section class="card" style="margin-bottom:22px">
+
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+
+        <div>
+            <h2 style="margin-bottom:7px">☁️ Cloud Database</h2>
+            <div
+                id="cloudStatus"
+                class="notice"
+                style="margin:0"
+            >
+                ⚠️ Cloud setup required
+            </div>
+        </div>
+
+        <button
+            class="btn btn-primary"
+            onclick="openCloudSetup()"
+        >
+            ⚙️ Cloud Setup
+        </button>
+
+    </div>
+
+</section>
+
+<!-- ================= CLOUD SETUP MODAL ================= -->
+
+<div
+    id="cloudSetup"
+    style="
+        display:none;
+        position:fixed;
+        inset:0;
+        z-index:100;
+        background:rgba(0,0,0,.45);
+        align-items:center;
+        justify-content:center;
+        padding:18px;
+    "
+>
+    <div
+        class="card"
+        style="width:min(560px,100%);max-height:90vh;overflow:auto"
+    >
+        <h2>☁️ Connect to Supabase</h2>
+
+        <p style="color:var(--muted);line-height:1.6">
+            Enter your Supabase Project URL, your anon/publishable key,
+            and a group code. The group code keeps different groups'
+            data separated.
+        </p>
+
+        <div class="field" style="margin-bottom:14px">
+            <label>Supabase Project URL</label>
+            <input
+                id="supabaseUrl"
+                type="url"
+                placeholder="https://your-project.supabase.co"
+            >
+        </div>
+
+        <div class="field" style="margin-bottom:14px">
+            <label>Supabase anon / publishable key</label>
+            <input
+                id="supabaseKey"
+                type="password"
+                placeholder="Paste your public/anon key"
+            >
+        </div>
+
+        <div class="field">
+            <label>Group Code</label>
+            <input
+                id="groupCode"
+                type="text"
+                placeholder="e.g. TRIP2026"
+                maxlength="40"
+            >
+        </div>
+
+        <div class="actions">
+            <button
+                class="btn btn-primary"
+                onclick="saveConfig()"
+            >
+                Connect & Load Data
+            </button>
+
+            <button
+                class="btn btn-light"
+                onclick="closeCloudSetup()"
+            >
+                Cancel
+            </button>
+        </div>
+
+        <p style="margin-top:16px;color:var(--muted);font-size:.82rem">
+            Use only the Supabase anon/publishable key in this website.
+            Never put your Supabase service_role/secret key in GitHub.
+        </p>
+    </div>
+</div>
+
+<!-- ================= PEOPLE + EXPENSE ================= -->
+
+<div class="grid">
+
+    <!-- PEOPLE -->
+
+    <section class="card" id="add">
+
+        <h2>
+            👥 People
+        </h2>
+
+        <div class="notice">
+            Add everyone who is sharing expenses in this group.
+        </div>
+
+        <div class="add-person">
+
+            <input
+                id="personInput"
+                type="text"
+                placeholder="Enter person's name"
+            >
+
+            <button
+                class="btn btn-primary"
+                onclick="addPerson()"
+            >
+                + Add
+            </button>
+
+        </div>
+
+        <div
+            id="peopleList"
+            class="people-list"
+        ></div>
+
+    </section>
+
+
+    <!-- ADD EXPENSE -->
+
+    <section class="card">
+
+        <h2>
+            ➕ Add Expense
+        </h2>
+
+        <div class="form-grid">
+
+            <div class="field full">
+
+                <label>
+                    Expense description
+                </label>
+
+                <input
+                    id="description"
+                    type="text"
+                    placeholder="e.g. Dinner, Hotel, Cab"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Amount (₹)
+                </label>
+
+                <input
+                    id="amount"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    placeholder="0.00"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Paid by
+                </label>
+
+                <select id="paidBy">
+
+                    <option value="">
+                        Select person
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <div class="actions">
+
+            <button
+                class="btn btn-primary"
+                onclick="addExpense()"
+            >
+                Add Expense
+            </button>
+
+            <button
+                class="btn btn-light"
+                onclick="clearForm()"
+            >
+                Clear
+            </button>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<!-- ================= STATISTICS ================= -->
+
+<section class="stats">
+
+    <div class="stat">
+
+        <div class="label">
+            Total expenses
+        </div>
+
+        <div
+            class="value"
+            id="totalExpenses"
+        >
+            ₹0.00
+        </div>
+
+    </div>
+
+
+    <div class="stat">
+
+        <div class="label">
+            Expenses count
+        </div>
+
+        <div
+            class="value"
+            id="expenseCount"
+        >
+            0
+        </div>
+
+    </div>
+
+
+    <div class="stat">
+
+        <div class="label">
+            People
+        </div>
+
+        <div
+            class="value"
+            id="peopleCount"
+        >
+            0
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= BALANCES ================= -->
+
+<div class="grid">
+
+    <section
+        class="card"
+        id="balances"
+    >
+
+        <h2>
+            📊 Balances
+        </h2>
+
+        <div
+            id="balancesList"
+            class="balance-list"
+        ></div>
+
+    </section>
+
+
+    <!-- SETTLEMENTS -->
+
+    <section class="card">
+
+        <h2>
+            🤝 Suggested Settlements
+        </h2>
+
+        <div
+            id="settlements"
+            class="settlements"
+        ></div>
+
+    </section>
+
+</div>
+
+
+<!-- ================= EXPENSE HISTORY ================= -->
+
+<section
+    class="card expenses"
+    id="history"
+>
+
+    <h2>
+        🧾 Expense History
+    </h2>
+
+    <div id="expenseList"></div>
+
+</section>
+
+
+<!-- ================= RESET ================= -->
+
+<section
+    class="card"
+    style="margin-top:22px;text-align:center"
+>
+
+    <h2>
+        🔄 Start a New Group
+    </h2>
+
+    <p style="color:var(--muted)">
+        Want to clear everything and start fresh?
+    </p>
+
+    <button
+        class="btn btn-danger"
+        onclick="resetAll()"
+    >
+        Reset All Data
+    </button>
+
+</section>
+
+</main>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="footer">
+
+    <p>
+        <strong>SplitWise</strong>
+        — Simple expense splitting for groups.
+    </p>
+
+    <p>
+        Your people and expenses are stored in the Supabase cloud database.
+    </p>
+
+</footer>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+
+/* ================= SUPABASE CLOUD STORAGE ================= */
+
+const SUPABASE_URL_KEY = "splitwise_supabase_url";
+const SUPABASE_KEY_KEY = "splitwise_supabase_key";
+const GROUP_KEY = "splitwise_group_code";
+
+let supabaseClient = null;
+let state = {
+    people: [],
+    expenses: []
+};
+
+let groupCode = localStorage.getItem(GROUP_KEY) || "";
+
+function getSupabaseConfig() {
+    return {
+        url: localStorage.getItem(SUPABASE_URL_KEY) || "",
+        key: localStorage.getItem(SUPABASE_KEY_KEY) || ""
+    };
+}
+
+function normalizeSupabaseUrl(rawUrl) {
+    let url = (rawUrl || "").trim();
+
+    // If the Supabase dashboard URL was pasted, convert it to
+    // the project's API URL.
+    const marker = "https://supabase.com/dashboard/project/";
+    if (url.startsWith(marker)) {
+        const rest = url.slice(marker.length);
+        const projectRef = rest.split("/")[0].trim();
+        if (projectRef) {
+            return "https://" + projectRef + ".supabase.co";
+        }
+    }
+
+    // If a valid Supabase project URL was entered, keep only its origin.
+    try {
+        const parsed = new URL(url);
+        if (parsed.hostname.endsWith(".supabase.co")) {
+            return parsed.origin;
+        }
+    } catch (error) {
+        // createClient will handle invalid input below.
+    }
+
+    return url.replace(/\/+$/, "");
+}
+
+function initSupabase() {
+    const config = getSupabaseConfig();
+
+    if (!config.url || !config.key) {
+        supabaseClient = null;
+        return false;
+    }
+
+    const normalizedUrl = normalizeSupabaseUrl(config.url);
+
+    try {
+        supabaseClient = window.supabase.createClient(
+            normalizedUrl,
+            config.key
+        );
+
+        localStorage.setItem(SUPABASE_URL_KEY, normalizedUrl);
+        return true;
+    } catch (error) {
+        console.error(error);
+        supabaseClient = null;
+        return false;
+    }
+}
+
+function requireCloudSetup() {
+    if (!supabaseClient) {
+        alert("Please enter your Supabase Project URL and anon/publishable key first.");
+        openCloudSetup();
+        return false;
+    }
+
+    if (!groupCode) {
+        alert("Please enter a group code first.");
+        openCloudSetup();
+        return false;
+    }
+
+    return true;
+}
+
+function saveConfig() {
+    const url = document.getElementById("supabaseUrl").value.trim();
+    const key = document.getElementById("supabaseKey").value.trim();
+    const group = document.getElementById("groupCode").value.trim();
+
+    if (!url || !key || !group) {
+        alert("Please enter the Supabase URL, anon/publishable key, and group code.");
+        return;
+    }
+
+    const normalizedUrl = normalizeSupabaseUrl(url);
+
+    localStorage.setItem(SUPABASE_URL_KEY, normalizedUrl);
+    localStorage.setItem(SUPABASE_KEY_KEY, key);
+    localStorage.setItem(GROUP_KEY, group.toUpperCase());
+
+    groupCode = group.toUpperCase();
+
+    if (!initSupabase()) {
+        alert("The Supabase URL or key could not be initialized. Please check them.");
+        return;
+    }
+
+    closeCloudSetup();
+    updateCloudStatus();
+    loadCloudData();
+}
+
+function openCloudSetup() {
+    document.getElementById("cloudSetup").style.display = "flex";
+
+    const config = getSupabaseConfig();
+
+    document.getElementById("supabaseUrl").value = config.url;
+    document.getElementById("supabaseKey").value = config.key;
+    document.getElementById("groupCode").value = groupCode;
+}
+
+function closeCloudSetup() {
+    document.getElementById("cloudSetup").style.display = "none";
+}
+
+async function loadCloudData() {
+    if (!requireCloudSetup()) return;
+
+    const { data: peopleData, error: peopleError } =
+        await supabaseClient
+            .from("splitwise_people")
+            .select("*")
+            .eq("group_code", groupCode)
+            .order("created_at", { ascending: true });
+
+    if (peopleError) {
+        console.error(peopleError);
+        alert("Could not load people from Supabase:\n" + peopleError.message);
+        return;
+    }
+
+    const { data: expenseData, error: expenseError } =
+        await supabaseClient
+            .from("splitwise_expenses")
+            .select("*")
+            .eq("group_code", groupCode)
+            .order("created_at", { ascending: true });
+
+    if (expenseError) {
+        console.error(expenseError);
+        alert("Could not load expenses from Supabase:\n" + expenseError.message);
+        return;
+    }
+
+    state.people = (peopleData || []).map(person => ({
+        id: person.id,
+        name: person.name
+    }));
+
+    state.expenses = (expenseData || []).map(expense => ({
+        id: expense.id,
+        description: expense.description,
+        amount: Number(expense.amount),
+        paidBy: expense.paid_by,
+        date: new Date(expense.created_at).toLocaleDateString(
+            "en-IN",
+            {
+                day: "2-digit",
+                month: "short",
+                year: "numeric"
+            }
+        )
+    }));
+
+    render();
+    updateCloudStatus();
+}
+
+function updateCloudStatus() {
+    const status = document.getElementById("cloudStatus");
+
+    if (supabaseClient && groupCode) {
+        status.textContent = "☁️ Cloud connected • Group: " + groupCode;
+        status.style.background = "#f0f8f5";
+        status.style.color = "#147558";
+        status.style.borderColor = "#cdebe1";
+    } else {
+        status.textContent = "⚠️ Cloud setup required";
+        status.style.background = "#fff8e8";
+        status.style.color = "#9a6700";
+        status.style.borderColor = "#f0d58a";
+    }
+}
+
+async function addPerson() {
+    const input = document.getElementById("personInput");
+    const name = input.value.trim();
+
+    if (!requireCloudSetup()) return;
+
+    if (!name) {
+        alert("Please enter a person's name.");
+        return;
+    }
+
+    if (
+        state.people.some(
+            person => person.name.toLowerCase() === name.toLowerCase()
+        )
+    ) {
+        alert("This person is already in the group.");
+        return;
+    }
+
+    const { data, error } = await supabaseClient
+        .from("splitwise_people")
+        .insert({
+            group_code: groupCode,
+            name: name
+        })
+        .select()
+        .single();
+
+    if (error) {
+        console.error(error);
+        alert("Could not add the person to the cloud:\n" + error.message);
+        return;
+    }
+
+    state.people.push({
+        id: data.id,
+        name: data.name
+    });
+
+    input.value = "";
+    render();
+}
+
+async function removePerson(index) {
+    if (!requireCloudSetup()) return;
+
+    const person = state.people[index];
+
+    const used = state.expenses.some(
+        expense => expense.paidBy === person.name
+    );
+
+    if (used) {
+        alert("This person is linked to an expense and cannot be removed.");
+        return;
+    }
+
+    const { error } = await supabaseClient
+        .from("splitwise_people")
+        .delete()
+        .eq("id", person.id)
+        .eq("group_code", groupCode);
+
+    if (error) {
+        console.error(error);
+        alert("Could not remove the person from the cloud.");
+        return;
+    }
+
+    state.people.splice(index, 1);
+    render();
+}
+
+async function addExpense() {
+    if (!requireCloudSetup()) return;
+
+    const description = document.getElementById("description").value.trim();
+    const amount = parseFloat(document.getElementById("amount").value);
+    const paidBy = document.getElementById("paidBy").value;
+
+    if (state.people.length < 2) {
+        alert("Add at least 2 people before adding an expense.");
+        return;
+    }
+
+    if (!description) {
+        alert("Please enter an expense description.");
+        return;
+    }
+
+    if (!amount || amount <= 0) {
+        alert("Please enter a valid amount.");
+        return;
+    }
+
+    if (!paidBy) {
+        alert("Please select who paid.");
+        return;
+    }
+
+    const { data, error } = await supabaseClient
+        .from("splitwise_expenses")
+        .insert({
+            group_code: groupCode,
+            description: description,
+            amount: amount,
+            paid_by: paidBy
+        })
+        .select()
+        .single();
+
+    if (error) {
+        console.error(error);
+        alert("Could not save the expense to the cloud.");
+        return;
+    }
+
+    state.expenses.push({
+        id: data.id,
+        description: data.description,
+        amount: Number(data.amount),
+        paidBy: data.paid_by,
+        date: new Date(data.created_at).toLocaleDateString(
+            "en-IN",
+            {
+                day: "2-digit",
+                month: "short",
+                year: "numeric"
+            }
+        )
+    });
+
+    clearForm();
+    render();
+}
+
+async function deleteExpense(id) {
+    if (!requireCloudSetup()) return;
+
+    if (!confirm("Delete this expense?")) return;
+
+    const { error } = await supabaseClient
+        .from("splitwise_expenses")
+        .delete()
+        .eq("id", id)
+        .eq("group_code", groupCode);
+
+    if (error) {
+        console.error(error);
+        alert("Could not delete the expense from the cloud.");
+        return;
+    }
+
+    state.expenses = state.expenses.filter(
+        expense => expense.id !== id
+    );
+
+    render();
+}
+
+async function resetAll() {
+    if (!requireCloudSetup()) return;
+
+    if (
+        !confirm(
+            "This will delete all people and expenses for group " +
+            groupCode +
+            ". Continue?"
+        )
+    ) {
+        return;
+    }
+
+    const { error: expenseError } = await supabaseClient
+        .from("splitwise_expenses")
+        .delete()
+        .eq("group_code", groupCode);
+
+    if (expenseError) {
+        console.error(expenseError);
+        alert("Could not reset cloud expenses.");
+        return;
+    }
+
+    const { error: peopleError } = await supabaseClient
+        .from("splitwise_people")
+        .delete()
+        .eq("group_code", groupCode);
+
+    if (peopleError) {
+        console.error(peopleError);
+        alert("Could not reset cloud people.");
+        return;
+    }
+
+    state = {
+        people: [],
+        expenses: []
+    };
+
+    render();
+}
+
+function save() {
+    // Kept for compatibility with the original app.
+    // Cloud changes are saved directly to Supabase.
+}
+
+/* ================= MONEY FORMAT ================= */
+
+
+function money(number) {
+
+    return new Intl.NumberFormat(
+        "en-IN",
+        {
+            style: "currency",
+            currency: "INR",
+            minimumFractionDigits: 2
+        }
+    ).format(number || 0);
+
+}
+
+
+/* ================= SECURITY ================= */
+
+function escapeHTML(value) {
+
+    return String(value).replace(
+        /[&<>"']/g,
+
+        function(character) {
+
+            return {
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#039;"
+            }[character];
+
+        }
+    );
+
+}
+
+
+/* ================= CLEAR FORM ================= */
+
+function clearForm() {
+
+    document
+        .getElementById("description")
+        .value = "";
+
+    document
+        .getElementById("amount")
+        .value = "";
+
+}
+
+
+/* ================= CALCULATE BALANCES ================= */
+
+function calculateBalances() {
+
+    const balances = {};
+
+
+    state.people.forEach(
+        person => {
+
+            balances[person.name] = 0;
+
+        }
+    );
+
+
+    state.expenses.forEach(
+        expense => {
+
+            const share =
+                expense.amount /
+                state.people.length;
+
+
+            balances[expense.paidBy] +=
+                expense.amount;
+
+
+            state.people.forEach(
+                person => {
+
+                    balances[person.name] -=
+                        share;
+
+                }
+            );
+
+        }
+    );
+
+
+    return balances;
+
+}
+
+
+/* ================= CALCULATE SETTLEMENTS ================= */
+
+function calculateSettlements() {
+
+    const balances =
+        calculateBalances();
+
+
+    const creditors = [];
+
+    const debtors = [];
+
+
+    Object.entries(balances)
+        .forEach(
+            ([name, amount]) => {
+
+                if (amount > 0.01) {
+
+                    creditors.push({
+
+                        name: name,
+
+                        amount: amount
+
+                    });
+
+                }
+
+
+                if (amount < -0.01) {
+
+                    debtors.push({
+
+                        name: name,
+
+                        amount: -amount
+
+                    });
+
+                }
+
+            }
+        );
+
+
+    creditors.sort(
+        (a, b) =>
+            b.amount - a.amount
+    );
+
+
+    debtors.sort(
+        (a, b) =>
+            b.amount - a.amount
+    );
+
+
+    const result = [];
+
+
+    let i = 0;
+
+    let j = 0;
+
+
+    while (
+        i < debtors.length &&
+        j < creditors.length
+    ) {
+
+        const debtor =
+            debtors[i];
+
+        const creditor =
+            creditors[j];
+
+
+        const amount =
+            Math.min(
+                debtor.amount,
+                creditor.amount
+            );
+
+
+        result.push({
+
+            from: debtor.name,
+
+            to: creditor.name,
+
+            amount: amount
+
+        });
+
+
+        debtor.amount -= amount;
+
+        creditor.amount -= amount;
+
+
+        if (
+            debtor.amount < 0.01
+        ) {
+
+            i++;
+
+        }
+
+
+        if (
+            creditor.amount < 0.01
+        ) {
+
+            j++;
+
+        }
+
+    }
+
+
+    return result;
+
+}
+
+
+/* ================= RENDER PEOPLE ================= */
+
+function renderPeople() {
+
+    const list =
+        document.getElementById(
+            "peopleList"
+        );
+
+
+    if (!state.people.length) {
+
+        list.innerHTML =
+            `
+            <span
+                style="
+                color:var(--muted);
+                font-size:.9rem
+                "
+            >
+                No people added yet.
+            </span>
+            `;
+
+    }
+
+    else {
+
+        list.innerHTML =
+            state.people
+                .map(
+                    (person, index) =>
+
+                    `
+                    <div class="person-chip">
+
+                        ${escapeHTML(person.name)}
+
+                        <button
+                            onclick="removePerson(${index})"
+                            style="
+                            border:0;
+                            background:none;
+                            color:inherit;
+                            font-weight:900
+                            "
+                        >
+                            ×
+                        </button>
+
+                    </div>
+                    `
+                )
+                .join("");
+
+    }
+
+
+    const select =
+        document.getElementById(
+            "paidBy"
+        );
+
+
+    const current =
+        select.value;
+
+
+    select.innerHTML =
+        `
+        <option value="">
+            Select person
+        </option>
+        `
+
+        +
+
+        state.people
+            .map(
+                person =>
+
+                `
+                <option
+                    value="${escapeHTML(person.name)}"
+                >
+                    ${escapeHTML(person.name)}
+                </option>
+                `
+            )
+            .join("");
+
+
+    if (
+        state.people.some(person => person.name === current)
+    ) {
+
+        select.value = current;
+
+    }
+
+}
+
+
+/* ================= RENDER STATS ================= */
+
+function renderStats() {
+
+    const total =
+        state.expenses.reduce(
+            (sum, expense) =>
+                sum + expense.amount,
+            0
+        );
+
+
+    document.getElementById(
+        "totalExpenses"
+    ).textContent =
+        money(total);
+
+
+    document.getElementById(
+        "expenseCount"
+    ).textContent =
+        state.expenses.length;
+
+
+    document.getElementById(
+        "peopleCount"
+    ).textContent =
+        state.people.length;
+
+}
+
+
+/* ================= RENDER BALANCES ================= */
+
+function renderBalances() {
+
+    const list =
+        document.getElementById(
+            "balancesList"
+        );
+
+
+    const balances =
+        calculateBalances();
+
+
+    if (!state.people.length) {
+
+        list.innerHTML =
+            `
+            <div class="empty">
+
+                <div class="empty-icon">
+                    👥
+                </div>
+
+                Add people to see balances.
+
+            </div>
+            `;
+
+        return;
+    }
+
+
+    list.innerHTML =
+        state.people
+            .map(
+                person => {
+
+                    const name = person.name;
+                    const amount =
+                        balances[name] || 0;
+
+
+                    let text =
+                        "settled up";
+
+                    let className =
+                        "";
+
+
+                    if (amount > 0.01) {
+
+                        text =
+                            `gets ${money(amount)}`;
+
+                        className =
+                            "green";
+
+                    }
+
+                    else if (
+                        amount < -0.01
+                    ) {
+
+                        text =
+                            `owes ${money(
+                                Math.abs(amount)
+                            )}`;
+
+                        className =
+                            "red";
+
+                    }
+
+
+                    return `
+
+                    <div class="balance">
+
+                        <span class="balance-name">
+                            ${escapeHTML(name)}
+                        </span>
+
+                        <span
+                            class="
+                            balance-amount
+                            ${className}
+                            "
+                        >
+                            ${text}
+                        </span>
+
+                    </div>
+
+                    `;
+
+                }
+            )
+            .join("");
+
+}
+
+
+/* ================= RENDER SETTLEMENTS ================= */
+
+function renderSettlements() {
+
+    const box =
+        document.getElementById(
+            "settlements"
+        );
+
+
+    const settlements =
+        calculateSettlements();
+
+
+    if (!settlements.length) {
+
+        box.innerHTML =
+            `
+            <div class="empty">
+
+                <div class="empty-icon">
+                    🎉
+                </div>
+
+                Everyone is settled up!
+
+            </div>
+            `;
+
+        return;
+    }
+
+
+    box.innerHTML =
+        settlements
+            .map(
+                settlement =>
+
+                `
+                <div class="settlement">
+
+                    <strong>
+                        ${escapeHTML(
+                            settlement.from
+                        )}
+                    </strong>
+
+                    pays
+
+                    <strong>
+                        ${escapeHTML(
+                            settlement.to
+                        )}
+                    </strong>
+
+                    <b style="float:right">
+
+                        ${money(
+                            settlement.amount
+                        )}
+
+                    </b>
+
+                </div>
+                `
+            )
+            .join("");
+
+}
+
+
+/* ================= RENDER EXPENSES ================= */
+
+function renderExpenses() {
+
+    const box =
+        document.getElementById(
+            "expenseList"
+        );
+
+
+    if (!state.expenses.length) {
+
+        box.innerHTML =
+            `
+            <div class="empty">
+
+                <div class="empty-icon">
+                    🧾
+                </div>
+
+                No expenses yet.
+                Add your first expense above.
+
+            </div>
+            `;
+
+        return;
+    }
+
+
+    box.innerHTML =
+        [...state.expenses]
+            .reverse()
+            .map(
+                expense =>
+
+                `
+                <div class="expense">
+
+                    <div class="expense-left">
+
+                        <div class="expense-icon">
+                            💳
+                        </div>
+
+                        <div>
+
+                            <div class="expense-title">
+
+                                ${escapeHTML(
+                                    expense.description
+                                )}
+
+                            </div>
+
+                            <div class="expense-meta">
+
+                                ${escapeHTML(
+                                    expense.paidBy
+                                )}
+
+                                paid • 
+
+                                ${escapeHTML(
+                                    expense.date
+                                )}
+
+                                • Split equally among
+
+                                ${state.people.length}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div style="text-align:right">
+
+                        <div class="expense-amount">
+
+                            ${money(
+                                expense.amount
+                            )}
+
+                        </div>
+
+                        <button
+                            class="
+                            btn
+                            btn-danger
+                            btn-small
+                            "
+                            onclick="
+                            deleteExpense(
+                                ${expense.id}
+                            )
+                            "
+                        >
+                            Delete
+                        </button>
+
+                    </div>
+
+                </div>
+                `
+            )
+            .join("");
+
+}
+
+
+/* ================= RENDER EVERYTHING ================= */
+
+function render() {
+
+    renderPeople();
+
+    renderStats();
+
+    renderBalances();
+
+    renderSettlements();
+
+    renderExpenses();
+
+}
+
+
+/* ================= ENTER KEY ================= */
+
+document
+    .getElementById("personInput")
+    .addEventListener(
+        "keydown",
+        function(event) {
+
+            if (
+                event.key === "Enter"
+            ) {
+
+                addPerson();
+
+            }
+
+        }
+    );
+
+
+/* ================= INITIALIZE ================= */
+
+initSupabase();
+updateCloudStatus();
+
+if (supabaseClient && groupCode) {
+    loadCloudData();
+} else {
+    render();
+    setTimeout(openCloudSetup, 250);
+}
+
+</script>
+
+</body>
+</html>
